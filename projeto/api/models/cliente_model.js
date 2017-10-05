@@ -17,9 +17,9 @@
         };
     
         this.findByName = function(name) {
-            for(var cli in repClientes) {
-                if(repClientes[cli].nome.toLowerCase() === name.toLowerCase()) {
-                    return repClientes[cli];
+            for(var cliente in repClientes) {
+                if(repClientes[cliente].nome.toLowerCase() === name.toLowerCase()) {
+                    return repClientes[cliente];
                 }
             }
         };

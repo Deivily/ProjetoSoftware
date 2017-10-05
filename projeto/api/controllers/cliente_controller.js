@@ -23,8 +23,8 @@ module.exports = function(app){
 	};
 
 	this.getByName = function(req, res, next) {
-		var cli = cliente.findByName(req.params.name);
-		return res.json(cli);
+		var resultadoBusca = cliente.findByName(req.params.name);
+		return res.json(resultadoBusca);
 	};
 
 	this.inicial = function(req, res, next) {
