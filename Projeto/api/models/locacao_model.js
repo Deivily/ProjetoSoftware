@@ -6,15 +6,15 @@ function Locacao(idLocacao, idCliente, listaItens, dataInicio, dataFim) {
     this.dataFim = dataFim;
     var repLocacoes = [];
 
-    this.salvarLocacao = function(locacao) {
+    this.saveLocacao = function(locacao) {
         repLocacoes.push(locacao);
     };
 
-    this.listarLocacoes = function() {
+    this.findAll = function() {
         return repLocacoes;
     };
 
-    this.findById = function(idLocacao) {
+    this.findByIdLocacao = function(idLocacao) {
         for(var locacao in repLocacoes) {
             if(repLocacoes[locacao].idLocacao === idLocacao) {
                 return repLocacoes[locacao];
@@ -29,6 +29,6 @@ function Locacao(idLocacao, idCliente, listaItens, dataInicio, dataFim) {
             }
         }
     };
-
-    module.exports = Locacao;
 };
+
+module.exports = Locacao;

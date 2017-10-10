@@ -1,10 +1,10 @@
 module.exports = function(app){
-	var item = app.controllers.item_controller;
+	var itemController = app.controllers.item_controller;
 
 	//app.get('/', cliente.index);
-	app.get('/itens', item.getAll);
-	app.get('/itens/:name', item.getByName);
-	app.get('/inicio', item.inicial);
+	app.get('/itens', itemController.getAll);
+	app.get('/itens/:name', itemController.getByName);
+	//app.get('/inicio', itemController.inicial);
 
 	return this;
 };

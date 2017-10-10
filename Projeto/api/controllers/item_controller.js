@@ -1,7 +1,6 @@
 module.exports = function(app){
-    var itemModel = app.models.item_model;
     var Item = require('../models/item_model.js');
-    var item = new Item(1, 'Ben 10' , 'R$15', true);
+    var item = new Item(1, 'Painel Ben 10' , 'R$15', true);
     item.salvarItem(item);
 
     this.getAll = function(req, res, next) {
@@ -10,8 +9,13 @@ module.exports = function(app){
     };
 
 	this.getByName = function(req, res, next) {
-		var resultadoBusca = cliente.findByName(req.params.name);
+		var resultadoBusca = item.findByName(req.params.name);
 		return res.json(resultadoBusca);
+    };
+    
+    this.getById = function(idItem) {
+		var resultadoBusca = item.findById(idItem);
+		return resultadoBusca;
 	};
 
 	this.inicial = function(req, res, next) {

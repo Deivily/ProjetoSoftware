@@ -27,6 +27,11 @@ module.exports = function(app){
 		return res.json(resultadoBusca);
 	};
 
+	this.getById = function(idCliente) {
+		var resultadoBusca = cliente.findById(idCliente);
+		return resultadoBusca;
+	};
+
 	this.inicial = function(req, res, next) {
 		return res.render('index', {title: 'Express'});
 	};

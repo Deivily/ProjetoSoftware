@@ -4,7 +4,7 @@ module.exports = function(app){
 	//app.get('/', cliente.index);
 	app.get('/clientes', cliente.getAll);
 	app.get('/clientes/:name', cliente.getByName);
-	app.get('/inicio', cliente.inicial);
+	//app.get('/inicio', cliente.inicial);
 
 	return this;
 };

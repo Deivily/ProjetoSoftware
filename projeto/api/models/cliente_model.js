@@ -23,6 +23,14 @@
                 }
             }
         };
+
+        this.findById = function(idCliente) {
+            for(var cliente in repClientes) {
+                if(repClientes[cliente].idCliente === idCliente) {
+                    return repClientes[cliente];
+                }
+            }
+        };
     };
     
     module.exports = Cliente;
