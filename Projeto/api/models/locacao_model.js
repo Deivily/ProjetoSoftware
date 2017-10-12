@@ -1,7 +1,7 @@
-function Locacao(idLocacao, idCliente, listaItens, dataInicio, dataFim) {
+function Locacao(idLocacao, idCliente, idItens, dataInicio, dataFim) {
     this.idLocacao = idLocacao;
     this.idCliente = idCliente;
-    this.listaItens = listaItens;
+    this.idItens = idItens;
     this.dataInicio = dataInicio;
     this.dataFim = dataFim;
     var repLocacoes = [];
@@ -15,17 +15,17 @@ function Locacao(idLocacao, idCliente, listaItens, dataInicio, dataFim) {
     };
 
     this.findByIdLocacao = function(idLocacao) {
-        for(var locacao in repLocacoes) {
-            if(repLocacoes[locacao].idLocacao === idLocacao) {
-                return repLocacoes[locacao];
+        for(var i in repLocacoes) {
+            if(repLocacoes[i].idLocacao == idLocacao) {
+                return repLocacoes[i];
             }
         }
     };
     
     this.findByIdCliente = function(idCliente) {
-        for(var locacao in repLocacoes) {
-            if(repLocacoes[locacao].idCliente === idCliente) {
-                return repLocacoes[locacao];
+        for(var i in repLocacoes) {
+            if(repLocacoes[i].idCliente == idCliente) {
+                return repLocacoes[i];
             }
         }
     };

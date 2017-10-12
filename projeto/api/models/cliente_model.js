@@ -17,17 +17,17 @@
         };
     
         this.findByName = function(name) {
-            for(var cliente in repClientes) {
-                if(repClientes[cliente].nome.toLowerCase() === name.toLowerCase()) {
-                    return repClientes[cliente];
+            for(var i in repClientes) {
+                if(repClientes[i].nome.toLowerCase() === name.toLowerCase()) {
+                    return repClientes[i];
                 }
             }
         };
 
         this.findById = function(idCliente) {
-            for(var cliente in repClientes) {
-                if(repClientes[cliente].idCliente === idCliente) {
-                    return repClientes[cliente];
+            for(var i in repClientes) {
+                if(repClientes[i].idCliente == idCliente) {
+                    return repClientes[i];
                 }
             }
         };

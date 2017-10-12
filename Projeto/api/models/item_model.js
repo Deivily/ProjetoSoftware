@@ -9,25 +9,32 @@ function Item(idItem, descricaoItem, valorLocacao, disponibilidadeItem) {
         repItens.push(item);
     };
 
+    this.removerItem = function(idItem) {
+        for(var i in repItens) {
+            if(repItens[i].idItem == idItem) {
+                repItens.pop(repItens[i]); 
+            }
+        }
+    }
+
     this.findAll = function() {
         return repItens;
     };
 
     this.findByName = function(name) {
-        for(var item in repItens) {
-            if(repItens[item].nome.toLowerCase() === name.toLowerCase()) {
-                return repItens[item];
+        for(var i in repItens) {
+            if(repItens[i].nome.toLowerCase() === name.toLowerCase()) {
+                return repItens[i];
             }
         }
     };
 
     this.findById = function(idItem) {
-        for(var item in repItens) {
-            if(repItens[item].idItem === idItem) {
-                return repItens[item];
+        for(var i in repItens) {
+            if(repItens[i].idItem == idItem) {
+                return repItens[i];
             }
         }
     };
 };
-
 module.exports = Item;
