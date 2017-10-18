@@ -1,4 +1,13 @@
-function Item(idItem, descricaoItem, valorLocacao, disponibilidadeItem) {
+var mongoose = require('mongoose');
+var itemSchema = mongoose.Schema;
+var Item = new itemSchema({
+    idItem: Number,
+    descricaoItem: String,
+    valorLocacao: Number,
+    disponibilidadeItem: Boolean
+});
+
+/*function Item(idItem, descricaoItem, valorLocacao, disponibilidadeItem) {
     this.idItem = idItem;
     this.descricaoItem = descricaoItem;
     this.valorLocacao = valorLocacao;
@@ -36,5 +45,5 @@ function Item(idItem, descricaoItem, valorLocacao, disponibilidadeItem) {
             }
         }
     };
-};
-module.exports = Item;
+};*/
+module.exports = mongoose.model('Item', Item);
