@@ -3,8 +3,8 @@ module.exports = function(app){
 
 	//app.get('/', cliente.index);
 	//app.get('/itens', itemController.saveItem);
-	app.get('/itens', itemController.getAll);
-	//app.get('/itens/:name', itemController.getByName);
+	app.get('/itens', itemController.getAllInDb);
+	app.get('/itens/:idItem', itemController.getByIdInDb);
 	//app.get('/inicio', itemController.inicial);
 
 	return this;

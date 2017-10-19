@@ -18,8 +18,8 @@ module.exports = function(app){
 
     //this.saveItem(1, 'Painel Ben 10', 10, true);
 
-    this.getAll = function(req, res, next) {
-        Item.find({}, function(err, itens){
+    this.getAllInDb = function(req, res, next) {
+        Item.find({}, function(err, resultQuery){
             if(err) {
                 var erro = new Error('Falha na busca dos itens no banco de dados!');
                 next(erro);
@@ -31,11 +31,11 @@ module.exports = function(app){
                 valorLocacao,
                 disponibilidadeItem;
                 
-                for(var i in itens) {
-                   item.idItem = itens[i].idItem;
-                    item.descricaoItem = itens[i].descricaoItem;
-                    item.valorLocacao = itens[i].valorLocacao;
-                    item.disponibilidadeItem = itens[i].disponibilidadeItem;
+                for(var i in resultQuery) {
+                   item.idItem = resultQuery[i].idItem;
+                    item.descricaoItem = resultQuery[i].descricaoItem;
+                    item.valorLocacao = resultQuery[i].valorLocacao;
+                    item.disponibilidadeItem = resultQuery[i].disponibilidadeItem;
                     arrayItens.push(item);
                 }
 
@@ -43,6 +43,31 @@ module.exports = function(app){
             }
         });
     }
+
+    this.getByIdInDb = function(req, res, next) {
+        Item.find({"idItem":req.params.idItem}, function(err, resultQuery){
+            console.log(resultQuery.length);
+            if(resultQuery.length < 1) {
+                var erro = new Error('Falha na busca do item com o id ' + req.params.idItem + ' no banco de dados!');
+                next(erro);
+            } else {
+                var item = new Object(),
+                idItem,
+                descricaoItem,
+                valorLocacao,
+                disponibilidadeItem;
+
+                item.idItem = resultQuery[0].idItem,
+                item.descricaoItem = resultQuery[0].descricaoItem,
+                item.valorLocacao = resultQuery[0].valorLocacao,
+                item.disponibilidadeItem = resultQuery[0].disponibilidadeItem;
+              
+                return res.json(item);  
+            }  
+        });
+    }
+
+    
     /*var novoItem = new Item(1, 'Painel Ben 10' , 'R$15', true);
     var novoItem2 = new Item(2, 'Painel Barbie' , 'R$15', true);
     var item = new Object(Item);
