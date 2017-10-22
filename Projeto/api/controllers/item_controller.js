@@ -1,7 +1,7 @@
 module.exports = function(app){
     var Item = require('../models/item_model.js');
 
-    this.saveItem = function(idItem, descricaoItem, valorLocacao, disponibilidadeItem) {
+    this.saveItemInDb = function(idItem, descricaoItem, valorLocacao, disponibilidadeItem) {
         new Item({
             'idItem': idItem,
             'descricaoItem': descricaoItem,
@@ -9,14 +9,14 @@ module.exports = function(app){
             'disponibilidadeItem': disponibilidadeItem
         }).save(function(err, item) {
             if(err) {
-                console.log('Falha ao salvar o item no banco de dados!')
+                console.log('Falha ao salvar o item no banco de dados!');
             } else {
-                console.log('Item salvo no banco de dados!')
+                console.log('Item salvo no banco de dados!');
             }
         });
     };
 
-    //this.saveItem(1, 'Painel Ben 10', 10, true);
+    //this.saveItemInDb(2, 'Painel Barbie', 10, true);
 
     this.getAllInDb = function(req, res, next) {
         Item.find({}, function(err, resultQuery){
@@ -42,12 +42,12 @@ module.exports = function(app){
                 return res.json(arrayItens);
             }
         });
-    }
+    };
 
     this.getByIdInDb = function(req, res, next) {
-        Item.find({"idItem":req.params.idItem}, function(err, resultQuery){
-            console.log(resultQuery.length);
-            if(resultQuery.length < 1) {
+        var criterioBusca = {"idItem":req.params.idItem};
+        Item.findOne(criterioBusca, function(err, resultQuery){
+            if(resultQuery == null) {
                 var erro = new Error('Falha na busca do item com o id ' + req.params.idItem + ' no banco de dados!');
                 next(erro);
             } else {
@@ -57,15 +57,80 @@ module.exports = function(app){
                 valorLocacao,
                 disponibilidadeItem;
 
-                item.idItem = resultQuery[0].idItem,
-                item.descricaoItem = resultQuery[0].descricaoItem,
-                item.valorLocacao = resultQuery[0].valorLocacao,
-                item.disponibilidadeItem = resultQuery[0].disponibilidadeItem;
+                item.idItem = resultQuery.idItem,
+                item.descricaoItem = resultQuery.descricaoItem,
+                item.valorLocacao = resultQuery.valorLocacao,
+                item.disponibilidadeItem = resultQuery.disponibilidadeItem;
               
                 return res.json(item);  
             }  
         });
-    }
+    };
+
+    this.getByNameInDb = function(req, res, next) {
+        var criterioBusca = {"descricaoItem":nomeProcurado};
+        Item.findOne(criterioBusca, function(err, resultQuery){
+            if(resultQuery == null) {
+                var erro = new Error('Falha na busca do item com o nome ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
+                next(erro);
+            } else {
+                var item = new Object(),
+                idItem,
+                descricaoItem,
+                valorLocacao,
+                disponibilidadeItem;
+
+                item.idItem = resultQuery.idItem,
+                item.descricaoItem = resultQuery.descricaoItem,
+                item.valorLocacao = resultQuery.valorLocacao,
+                item.disponibilidadeItem = resultQuery.disponibilidadeItem;
+              
+                return res.json(item);  
+            }  
+        });
+    };
+
+    this.getByPartOfNameInDb = function(req, res, next) {
+        var nomeProcurado = '^' + req.params.nomeItem + '.*';
+        var criterioBusca = {"descricaoItem": {$regex: nomeProcurado}};
+        Item.find(criterioBusca, function(err, resultQuery){
+            if(resultQuery.length < 1) {
+                var erro = new Error('Falha na busca do item com o nome ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
+                next(erro);
+            } else {
+                var arrayItens = [];
+                var item = new Object(),
+                idItem,
+                descricaoItem,
+                valorLocacao,
+                disponibilidadeItem;
+                
+                for(var i in resultQuery) {
+                   item.idItem = resultQuery[i].idItem;
+                    item.descricaoItem = resultQuery[i].descricaoItem;
+                    item.valorLocacao = resultQuery[i].valorLocacao;
+                    item.disponibilidadeItem = resultQuery[i].disponibilidadeItem;
+                    arrayItens.push(item);
+                }
+
+                return res.json(arrayItens);  
+            }  
+        });
+    };
+
+    this.removeByIdInDb = function(req, res, next) {
+        var idProcurado = req.params.idItem;
+        var criterioRemocao = {"idItem":idProcurado};
+        Item.findOneAndRemove(criterioRemocao, function(err, resultQuery) {
+            if(resultQuery == null) {
+                var erro = new Error('Falha ao tentar remover o item com o id ' + idProcurado + "!");
+                next(erro);
+            } else {
+                res.write("<h1>Item com o id " + idProcurado + " removido!</h1>");
+                res.end();
+            }
+        });
+    };
 
     
     /*var novoItem = new Item(1, 'Painel Ben 10' , 'R$15', true);
