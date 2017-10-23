@@ -118,6 +118,42 @@ module.exports = function(app){
         });
     };
 
+    this.updateByIdInDb = function(req, res, next) {
+        var idProcurado = req.params.idItem;
+        var criterioAtualizacao = {"idItem":idProcurado};
+        Item.findOne(criterioAtualizacao, function(err, resultQuery) {
+            if(resultQuery == null) {
+                var erro = new Error('O item com o id ' + idProcurado + ' não foi encontrado!');
+                next(erro);
+            } else {
+                var itemAtualizado = new Object(),
+                idItem,
+                descricaoItem,
+                valorLocacao,
+                disponibilidadeItem;
+                itemAtualizado.idItem = 3;
+                itemAtualizado.descricaoItem = 'Painel Max Steel';
+                itemAtualizado.valorLocacao = 15;
+                itemAtualizado.disponibilidadeItem = true;
+
+                var item = resultQuery;
+                item.idItem = itemAtualizado.idItem;
+                item.descricaoItem = itemAtualizado.descricaoItem;
+                item.valorLocacao = itemAtualizado.valorLocacao;
+                item.disponibilidadeItem = itemAtualizado.disponibilidadeItem;
+                item.save(function(err, itemAtualizado) {
+                    if(err) {
+                        var erro = new Error('Falha ao tentar atualizar o item com o id ' + idProcurado + "!");
+                        next(erro);
+                    } else {
+                        res.write("<h1>Item com o id " + idProcurado + " atualizado!</h1>");
+                        res.end();
+                    }
+                });  
+            }
+        });
+    };
+
     this.removeByIdInDb = function(req, res, next) {
         var idProcurado = req.params.idItem;
         var criterioRemocao = {"idItem":idProcurado};
