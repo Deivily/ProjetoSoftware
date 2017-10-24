@@ -4,7 +4,30 @@ module.exports = function(app){
     var Locacao = require('../models/locacao_model.js');
     var Cliente = require('../models/cliente_model.js');
     var Item = require('../models/item_model.js');
-    var idItens = [];
+
+    this.saveLocacaoInDb = function(idLocacao, idCliente, idItens, dataInicio, dataFim) {
+        new Locacao({
+            'idLocacao': idLocacao,
+            'idCliente': idCliente,
+            'idItens': idItens,
+            'dataInicio': dataInicio,
+            'dataFim': dataFim
+        }).save(function(err, locacao) {
+            if(err) {
+                console.log('Falha ao salvar a locacao no banco de dados!');
+                console.log(err);
+            } else {
+                console.log('Locacao salva no banco de dados!');
+            }
+        });
+    };
+
+    var idItens = [1,2];
+
+    this.saveLocacaoInDb(1, 1, idItens, '2017-10-24', '2017-10-25');
+
+
+    /*var idItens = [];
     idItens.push(1);
     idItens.push(2);
     var locacao = new Object(Locacao);
@@ -73,7 +96,7 @@ module.exports = function(app){
 
 	this.inicial = function(req, res, next) {
 		return res.render('index', {title: 'Express'});
-    };
+    };*/
     
     return this;
 };

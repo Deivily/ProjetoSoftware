@@ -1,12 +1,16 @@
-function Locacao(idLocacao, idCliente, idItens, dataInicio, dataFim) {
-    this.idLocacao = idLocacao;
-    this.idCliente = idCliente;
-    this.idItens = idItens;
-    this.dataInicio = dataInicio;
-    this.dataFim = dataFim;
-    var repLocacoes = [];
+var mongoose = require('mongoose');
+var locacaoSchema = mongoose.Schema;
 
-    this.saveLocacao = function(locacao) {
+var Locacao = new locacaoSchema({
+    idLocacao: Number,
+    idCliente: Number,
+    idItens: Array,
+    dataInicio: Date,
+    dataFim: Date
+});
+   
+
+    /*this.saveLocacao = function(locacao) {
         repLocacoes.push(locacao);
     };
 
@@ -29,6 +33,6 @@ function Locacao(idLocacao, idCliente, idItens, dataInicio, dataFim) {
             }
         }
     };
-};
+};*/
 
-module.exports = Locacao;
+module.exports = mongoose.model('Locacao', Locacao);

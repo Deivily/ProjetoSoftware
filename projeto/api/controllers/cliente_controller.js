@@ -32,7 +32,7 @@ module.exports = function(app){
 		{telefone_3: null}
 	];
 
-	//this.saveClienteInDb(1, 'Deivily', '111.111.111-11', '02/07/1979', endereco, telefones, 'deivily@bol.com.br');
+	//this.saveClienteInDb(1, 'Deivily', '111.111.111-11', '1979-07-24', endereco, telefones, 'deivily@bol.com.br');
 	
 	this.getAllInDb = function(req, res, next) {
         Cliente.find({}, function(err, resultQuery){
