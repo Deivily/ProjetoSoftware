@@ -4,7 +4,7 @@ module.exports = function(app){
 	//app.get('/', cliente.index);
 	app.get('/clientes', cliente.getAllInDb);
 	app.get('/clientes/id/:idCliente', cliente.getByIdInDb);
-	//app.get('/clientes/:name', cliente.getByName);
+	app.get('/clientes/nome/:nomeCliente', cliente.getByNameInDb);
 	//app.get('/inicio', cliente.inicial);
 
 	return this;

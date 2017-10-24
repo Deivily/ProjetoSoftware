@@ -95,6 +95,36 @@ module.exports = function(app){
                 return res.json(cliente);  
             }  
         });
+	};
+	
+	this.getByNameInDb = function(req, res, next) {
+        var nomeProcurado = req.params.nomeCliente;
+        var criterioBusca = {"nome":nomeProcurado};
+        Cliente.findOne(criterioBusca, function(err, resultQuery){
+            if(resultQuery == null) {
+                var erro = new Error('Falha na busca do cliente com o nome ' +'"' + req.params.nomeCliente + '"' + ' no banco de dados!');
+                next(erro);
+            } else {
+                var cliente = new Object(),
+				idCliente,
+				nome,
+				cpf,
+				dataNascimento,
+				endereco,
+				telefones,
+				email;
+
+                cliente.idCliente = resultQuery.idCliente;
+				cliente.nome = resultQuery.nome;
+				cliente.cpf = resultQuery.cpf;
+				cliente.dataNascimento = resultQuery.dataNascimento;
+				cliente.endereco = resultQuery.endereco;
+				cliente.telefones = resultQuery.telefones;
+				cliente.email = resultQuery.email;
+              
+                return res.json(cliente);
+            }  
+        });
     };
 	
 	/*cliente.salvarCliente(cliente);
