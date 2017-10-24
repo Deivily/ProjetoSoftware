@@ -1,12 +1,18 @@
-    function Cliente(idCliente, nome, cpf, dataNascimento, endereco, telefones, email) {
-        this.idCliente = idCliente;
-        this.nome = nome;
-        this.cpf = cpf;
-        this.dataNascimento = dataNascimento;
-        this.endereco = endereco;
-        this.telefones = telefones;
-        this.email = email;
-        var repClientes = [];
+var mongoose = require('mongoose');
+var clienteSchema = mongoose.Schema;
+    
+var Cliente = new clienteSchema({
+    idCliente: Number,
+    nome: String,
+    cpf: String,
+    dataNascimento: Date,
+    endereco: Array,
+    telefones: Array,
+    email: String
+});
+        
+    
+    /*var repClientes = [];
 
         this.salvarCliente = function(cliente) {
             repClientes.push(cliente);
@@ -31,6 +37,6 @@
                 }
             }
         };
-    };
+    };*/
     
-    module.exports = Cliente;
+    module.exports = mongoose.model('Cliente', Cliente);

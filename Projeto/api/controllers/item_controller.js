@@ -16,7 +16,7 @@ module.exports = function(app){
         });
     };
 
-    //this.saveItemInDb(2, 'Painel Barbie', 10, true);
+    //this.saveItemInDb(1, 'Painel Ben 10', 10, true);
 
     this.getAllInDb = function(req, res, next) {
         Item.find({}, function(err, resultQuery){
@@ -25,14 +25,15 @@ module.exports = function(app){
                 next(erro);
             } else {
                 var arrayItens = [];
-                var item = new Object(),
-                idItem,
-                descricaoItem,
-                valorLocacao,
-                disponibilidadeItem;
                 
                 for(var i in resultQuery) {
-                   item.idItem = resultQuery[i].idItem;
+                    var item = new Object(),
+                    idItem,
+                    descricaoItem,
+                    valorLocacao,
+                    disponibilidadeItem;
+
+                    item.idItem = resultQuery[i].idItem;
                     item.descricaoItem = resultQuery[i].descricaoItem;
                     item.valorLocacao = resultQuery[i].valorLocacao;
                     item.disponibilidadeItem = resultQuery[i].disponibilidadeItem;
@@ -68,6 +69,7 @@ module.exports = function(app){
     };
 
     this.getByNameInDb = function(req, res, next) {
+        var nomeProcurado = req.params.nomeItem;
         var criterioBusca = {"descricaoItem":nomeProcurado};
         Item.findOne(criterioBusca, function(err, resultQuery){
             if(resultQuery == null) {
@@ -99,14 +101,16 @@ module.exports = function(app){
                 next(erro);
             } else {
                 var arrayItens = [];
-                var item = new Object(),
-                idItem,
-                descricaoItem,
-                valorLocacao,
-                disponibilidadeItem;
+                
                 
                 for(var i in resultQuery) {
-                   item.idItem = resultQuery[i].idItem;
+                    var item = new Object(),
+                    idItem,
+                    descricaoItem,
+                    valorLocacao,
+                    disponibilidadeItem;
+                    
+                    item.idItem = resultQuery[i].idItem;
                     item.descricaoItem = resultQuery[i].descricaoItem;
                     item.valorLocacao = resultQuery[i].valorLocacao;
                     item.disponibilidadeItem = resultQuery[i].disponibilidadeItem;
@@ -133,7 +137,7 @@ module.exports = function(app){
                 disponibilidadeItem;
                 itemAtualizado.idItem = 3;
                 itemAtualizado.descricaoItem = 'Painel Max Steel';
-                itemAtualizado.valorLocacao = 15;
+                itemAtualizado.valorLocacao = 20;
                 itemAtualizado.disponibilidadeItem = true;
 
                 var item = resultQuery;
