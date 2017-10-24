@@ -27,9 +27,9 @@ module.exports = function(app){
 		{cep: '53110-730'}
 	];
     var telefones = [
-		{telefone1: '988322771'},
-		{telefone2: null},
-		{telefone3: null}
+		{telefone_1: '988322771'},
+		{telefone_2: null},
+		{telefone_3: null}
 	];
 
 	//this.saveClienteInDb(1, 'Deivily', '111.111.111-11', '02/07/1979', endereco, telefones, 'deivily@bol.com.br');
@@ -59,11 +59,41 @@ module.exports = function(app){
 					cliente.endereco = resultQuery[i].endereco;
 					cliente.telefones = resultQuery[i].telefones;
 					cliente.email = resultQuery[i].email;
-                    arrayItens.push(cliente);
+
+                    arrayClientes.push(cliente);
                 }
 
                 return res.json(arrayClientes);
             }
+        });
+	};
+	
+	this.getByIdInDb = function(req, res, next) {
+        var criterioBusca = {"idCliente":req.params.idCliente};
+        Cliente.findOne(criterioBusca, function(err, resultQuery){
+            if(resultQuery == null) {
+                var erro = new Error('Falha na busca do cliente com o id ' + req.params.idCliente + ' no banco de dados!');
+                next(erro);
+            } else {
+                var cliente = new Object(),
+				idCliente,
+				nome,
+				cpf,
+				dataNascimento,
+				endereco,
+				telefones,
+				email;
+
+                cliente.idCliente = resultQuery.idCliente;
+				cliente.nome = resultQuery.nome;
+				cliente.cpf = resultQuery.cpf;
+				cliente.dataNascimento = resultQuery.dataNascimento;
+				cliente.endereco = resultQuery.endereco;
+				cliente.telefones = resultQuery.telefones;
+				cliente.email = resultQuery.email;
+              
+                return res.json(cliente);  
+            }  
         });
     };
 	

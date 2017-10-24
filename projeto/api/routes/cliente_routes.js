@@ -2,7 +2,8 @@ module.exports = function(app){
 	var cliente = app.controllers.cliente_controller;
 
 	//app.get('/', cliente.index);
-	//app.get('/clientes', cliente.getAll);
+	app.get('/clientes', cliente.getAllInDb);
+	app.get('/clientes/id/:idCliente', cliente.getByIdInDb);
 	//app.get('/clientes/:name', cliente.getByName);
 	//app.get('/inicio', cliente.inicial);
 
