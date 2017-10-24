@@ -162,6 +162,64 @@ module.exports = function(app){
                 return res.json(arrayClientes);  
             }  
         });
+	};
+	
+	this.updateByIdInDb = function(req, res, next) {
+        var idProcurado = req.params.idCliente;
+        var criterioAtualizacao = {"idCliente":idProcurado};
+        Cliente.findOne(criterioAtualizacao, function(err, resultQuery) {
+            if(resultQuery == null) {
+                var erro = new Error('O cliente com o id ' + idProcurado + ' não foi encontrado!');
+                next(erro);
+            } else {
+				var clienteAtualizado = new Object(),
+				idCliente = 2,
+				nome,
+				cpf,
+				dataNascimento,
+				endereco,
+				telefones,
+				email;
+
+				clienteAtualizado.idCliente = 2;
+				clienteAtualizado.nome = 'Deivily Lira';
+				clienteAtualizado.cpf = '222.222.222-22';
+				clienteAtualizado.dataNascimento = '01/01/2001';
+				clienteAtualizado.endereco = [
+						{rua: 'rua Z'},
+						{numero: '74'},
+						{bairro: 'Salgadinho'},
+						{cidade: 'Olinda'},
+						{estado: 'PE'},
+						{cep: '53110-730'}
+				]
+				clienteAtualizado.telefones = [
+					{telefone_1: '988888888'},
+					{telefone_2: null},
+					{telefone_3: null}
+				]
+				clienteAtualizado.email = 'deivily@uol.com.br';
+
+                var cliente = resultQuery;
+                cliente.idCliente = clienteAtualizado.idCliente,
+				cliente.nome = clienteAtualizado.nome,
+				cliente.cpf = clienteAtualizado.cpf,
+				cliente.dataNascimento = clienteAtualizado.dataNascimento,
+				cliente.endereco = clienteAtualizado.endereco,
+				cliente.telefones = clienteAtualizado.telefones,
+				cliente.email = clienteAtualizado.email;
+
+                cliente.save(function(err, clienteAtualizado) {
+                    if(err) {
+                        var erro = new Error('Falha ao tentar atualizar o cliente com o id ' + idProcurado + "!");
+                        next(erro);
+                    } else {
+                        res.write("<h1>Cliente com o id " + idProcurado + " atualizado!</h1>");
+                        res.end();
+                    }
+                });  
+            }
+        });
     };
 	
 	/*cliente.salvarCliente(cliente);

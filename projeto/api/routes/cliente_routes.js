@@ -6,6 +6,7 @@ module.exports = function(app){
 	app.get('/clientes/id/:idCliente', cliente.getByIdInDb);
 	app.get('/clientes/nome/:nomeCliente', cliente.getByNameInDb);
 	app.get('/clientes/parte_nome/:nomeCliente', cliente.getByPartOfNameInDb);
+	app.get('/clientes/atualizar/:idCliente', cliente.updateByIdInDb);
 	//app.get('/inicio', cliente.inicial);
 
 	return this;
