@@ -93,7 +93,7 @@ module.exports = function(app){
     };
 
     this.getByPartOfNameInDb = function(req, res, next) {
-        var nomeProcurado = '^' + req.params.nomeItem + '.*';
+        var nomeProcurado = new RegExp('^' + req.params.nomeItem + '.*', 'i');
         var criterioBusca = {"descricaoItem": {$regex: nomeProcurado}};
         Item.find(criterioBusca, function(err, resultQuery){
             if(resultQuery.length < 1) {
