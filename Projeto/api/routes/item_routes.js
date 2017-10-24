@@ -7,8 +7,8 @@ module.exports = function(app){
 	app.get('/itens/id/:idItem', itemController.getByIdInDb);
 	app.get('/itens/nome/:nomeItem', itemController.getByNameInDb);
 	app.get('/itens/parte_nome/:nomeItem', itemController.getByPartOfNameInDb);
-	app.get('/itens/remover/:idItem', itemController.removeByIdInDb);
 	app.get('/itens/atualizar/:idItem', itemController.updateByIdInDb);
+	app.get('/itens/remover/:idItem', itemController.removeByIdInDb);
 	//app.get('/inicio', itemController.inicial);
 
 	return this;

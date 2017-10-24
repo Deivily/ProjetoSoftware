@@ -220,6 +220,20 @@ module.exports = function(app){
                 });  
             }
         });
+	};
+	
+	this.removeByIdInDb = function(req, res, next) {
+        var idProcurado = req.params.idCliente;
+        var criterioRemocao = {"idCliente":idProcurado};
+        Cliente.findOneAndRemove(criterioRemocao, function(err, resultQuery) {
+            if(resultQuery == null) {
+                var erro = new Error('Falha ao tentar remover o cliente com o id ' + idProcurado + "!");
+                next(erro);
+            } else {
+                res.write("<h1>Cliente com o id " + idProcurado + " removido!</h1>");
+                res.end();
+            }
+        });
     };
 	
 	/*cliente.salvarCliente(cliente);
