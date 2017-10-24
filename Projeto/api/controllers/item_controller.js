@@ -97,7 +97,7 @@ module.exports = function(app){
         var criterioBusca = {"descricaoItem": {$regex: nomeProcurado}};
         Item.find(criterioBusca, function(err, resultQuery){
             if(resultQuery.length < 1) {
-                var erro = new Error('Falha na busca do item com o nome ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
+                var erro = new Error('Falha na busca dos itens com o nome similar a ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
                 next(erro);
             } else {
                 var arrayItens = [];

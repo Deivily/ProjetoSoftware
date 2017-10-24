@@ -125,6 +125,43 @@ module.exports = function(app){
                 return res.json(cliente);
             }  
         });
+	};
+	
+	this.getByPartOfNameInDb = function(req, res, next) {
+        var nomeProcurado = new RegExp('^' + req.params.nomeCliente + '.*', 'i');
+        var criterioBusca = {"nome": {$regex: nomeProcurado}};
+        Cliente.find(criterioBusca, function(err, resultQuery){
+            if(resultQuery.length < 1) {
+                var erro = new Error('Falha na busca dos clientes com o nome similar a ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
+                next(erro);
+            } else {
+                var arrayClientes = [];
+                
+                
+                for(var i in resultQuery) {
+                    var cliente = new Object(),
+                    idCliente,
+					nome,
+					cpf,
+					dataNascimento,
+					endereco,
+					telefones,
+					email;
+
+					cliente.idCliente = resultQuery[i].idCliente;
+					cliente.nome = resultQuery[i].nome;
+					cliente.cpf = resultQuery[i].cpf;
+					cliente.dataNascimento = resultQuery[i].dataNascimento;
+					cliente.endereco = resultQuery[i].endereco;
+					cliente.telefones = resultQuery[i].telefones;
+					cliente.email = resultQuery[i].email;
+
+                    arrayClientes.push(cliente);
+                }
+
+                return res.json(arrayClientes);  
+            }  
+        });
     };
 	
 	/*cliente.salvarCliente(cliente);
