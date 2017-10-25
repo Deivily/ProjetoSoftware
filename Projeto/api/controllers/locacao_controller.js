@@ -24,8 +24,49 @@ module.exports = function(app){
 
     var idItens = [1,2];
 
-    this.saveLocacaoInDb(1, 1, idItens, '2017-10-24', '2017-10-25');
+    //this.saveLocacaoInDb(1, 1, idItens, '2017-10-24', '2017-10-25');
 
+    this.getAllInDb = function(req, res, next) {
+        Locacao.find({}, function(err, resultQuery){
+            if(err) {
+                var erro = new Error('Falha na busca das locações no banco de dados!');
+                next(erro);
+            } else {
+                var arrayLocacoes = [];
+                
+                for(var i in resultQuery) {
+                    var dadosLocacao = new Object(),
+                    cliente,
+                    itens,
+                    dataInicio,
+                    dataFim;
+
+                    console.log(clienteController.getByIdInDb(1));
+                    if(clienteController.getByIdInDb(resultQuery[i].idCliente) !== undefined) {
+                        var resultadoBuscaCliente = clienteController.getByIdInDb(resultQuery[i].idCliente);
+                        dadosLocacao.cliente = resultadoBuscaCliente;
+                    } else {
+                        dadosLocacao.cliente = null;
+                    }
+
+                    dadosLocacao.itens = [];
+                    for(var j in resultQuery[i].idItens) {
+                        var resultadoBuscaItem = itemController.getByIdInDb(resultQuery[i].idItens[j]);
+                        if(resultadoBuscaItem !== undefined) {
+                            dadosLocacao.itens.push(resultadoBuscaItem);
+                        } else {
+                            dadosLocacao.itens.push(null);
+                        } 
+                    }
+                    dadosLocacao.dataInicio = resultQuery[i].dataInicio;
+                    dadosLocacao.dataFim = resultQuery[i].dataFim;
+                    arrayLocacoes.push(locacao);
+                }
+
+                return res.json(arrayLocacoes);
+            }
+        });
+    };
 
     /*var idItens = [];
     idItens.push(1);
