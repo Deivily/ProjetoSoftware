@@ -1,8 +1,9 @@
 module.exports = function(app){
-	var Cliente = require('../models/cliente_model.js');
+	var ClienteModel = require('../models/cliente_model.js');
+	var cliente = new Object(), idCliente, nome, cpf, dataNascimento, endereco, telefones, email;
 
 	this.saveClienteInDb = function(idCliente, nome, cpf, dataNascimento, endereco, telefones, email) {
-        new Cliente({
+        new ClienteModel({
             'idCliente': idCliente,
             'nome': nome,
             'cpf': cpf,
@@ -18,24 +19,14 @@ module.exports = function(app){
             }
         });
     };
-	var endereco = [
-		{rua: 'rua B'},
-		{numero: '74'},
-		{bairro: 'Salgadinho'},
-		{cidade: 'Olinda'},
-		{estado: 'PE'},
-		{cep: '53110-730'}
-	];
-    var telefones = [
-		{telefone_1: '988322771'},
-		{telefone_2: null},
-		{telefone_3: null}
-	];
+	var endereco = [{rua: 'rua B'},	{numero: '74'},	{bairro: 'Salgadinho'},	{cidade: 'Olinda'},	{estado: 'PE'},
+		{cep: '53110-730'}];
+    var telefones = [{telefone_1: '988322771'},	{telefone_2: null}, {telefone_3: null}];
 
-	//this.saveClienteInDb(1, 'Deivily', '111.111.111-11', '1979-07-24', endereco, telefones, 'deivily@bol.com.br');
+	//this.saveClienteInDb(2, 'Rodrigo', '111.111.111-11', '1979-07-24', endereco, telefones, 'deivily@bol.com.br');
 	
 	this.getAllInDb = function(req, res, next) {
-        Cliente.find({}, function(err, resultQuery){
+        ClienteModel.find({}, function(err, resultQuery){
             if(err) {
                 var erro = new Error('Falha na busca dos clientes no banco de dados!');
                 next(erro);
@@ -43,47 +34,31 @@ module.exports = function(app){
                 var arrayClientes = [];
                 
                 for(var i in resultQuery) {
-                    var cliente = new Object(),
-                    idCliente,
-					nome,
-					cpf,
-					dataNascimento,
-					endereco,
-					telefones,
-					email;
+					var newCliente = new Object(), idCliente, nome, cpf, dataNascimento, endereco, telefones, email;
+					newCliente.idCliente = resultQuery[i].idCliente;
+					newCliente.nome = resultQuery[i].nome;
+					newCliente.cpf = resultQuery[i].cpf;
+					newCliente.dataNascimento = resultQuery[i].dataNascimento;
+					newCliente.endereco = resultQuery[i].endereco;
+					newCliente.telefones = resultQuery[i].telefones;
+					newCliente.email = resultQuery[i].email;
 
-					cliente.idCliente = resultQuery[i].idCliente;
-					cliente.nome = resultQuery[i].nome;
-					cliente.cpf = resultQuery[i].cpf;
-					cliente.dataNascimento = resultQuery[i].dataNascimento;
-					cliente.endereco = resultQuery[i].endereco;
-					cliente.telefones = resultQuery[i].telefones;
-					cliente.email = resultQuery[i].email;
-
-                    arrayClientes.push(cliente);
+                    arrayClientes.push(newCliente);
                 }
 
                 return res.json(arrayClientes);
             }
         });
 	};
-	
-	this.getByIdInDb = function(req, res, next) {
-        var criterioBusca = {"idCliente":req.params.idCliente};
-        Cliente.findOne(criterioBusca, function(err, resultQuery){
-            if(resultQuery == null) {
-                var erro = new Error('Falha na busca do cliente com o id ' + req.params.idCliente + ' no banco de dados!');
-                next(erro);
-            } else {
-                var cliente = new Object(),
-				idCliente,
-				nome,
-				cpf,
-				dataNascimento,
-				endereco,
-				telefones,
-				email;
 
+	this.getByIdInDb = function(req, res, next) {
+		var idCliente = req.params.idCliente;
+		var condicoes = {"idCliente": idCliente};
+		ClienteModel.findOne(condicoes, function(err, resultQuery){
+            if(resultQuery == null || err) {
+				var erro = 'Falha na busca pelo cliente com o id ' + idCliente + '!';
+				next(erro);
+            } else {            
                 cliente.idCliente = resultQuery.idCliente;
 				cliente.nome = resultQuery.nome;
 				cliente.cpf = resultQuery.cpf;
@@ -91,29 +66,20 @@ module.exports = function(app){
 				cliente.endereco = resultQuery.endereco;
 				cliente.telefones = resultQuery.telefones;
 				cliente.email = resultQuery.email;
-              
-                return res.json(cliente);  
-            }  
-        });
+				
+				return res.json(cliente);
+			}
+		});
 	};
-	
+
 	this.getByNameInDb = function(req, res, next) {
         var nomeProcurado = req.params.nomeCliente;
         var criterioBusca = {"nome":nomeProcurado};
-        Cliente.findOne(criterioBusca, function(err, resultQuery){
+        ClienteModel.findOne(criterioBusca, function(err, resultQuery){
             if(resultQuery == null) {
-                var erro = new Error('Falha na busca do cliente com o nome ' +'"' + req.params.nomeCliente + '"' + ' no banco de dados!');
+                var erro = new Error('Falha na busca do cliente com o nome ' +'"' + nomeProcurado + '"' + ' no banco de dados!');
                 next(erro);
             } else {
-                var cliente = new Object(),
-				idCliente,
-				nome,
-				cpf,
-				dataNascimento,
-				endereco,
-				telefones,
-				email;
-
                 cliente.idCliente = resultQuery.idCliente;
 				cliente.nome = resultQuery.nome;
 				cliente.cpf = resultQuery.cpf;
@@ -130,24 +96,13 @@ module.exports = function(app){
 	this.getByPartOfNameInDb = function(req, res, next) {
         var nomeProcurado = new RegExp('^' + req.params.nomeCliente + '.*', 'i');
         var criterioBusca = {"nome": {$regex: nomeProcurado}};
-        Cliente.find(criterioBusca, function(err, resultQuery){
+        ClienteModel.find(criterioBusca, function(err, resultQuery){
             if(resultQuery.length < 1) {
                 var erro = new Error('Falha na busca dos clientes com o nome similar a ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
                 next(erro);
             } else {
                 var arrayClientes = [];
-                
-                
                 for(var i in resultQuery) {
-                    var cliente = new Object(),
-                    idCliente,
-					nome,
-					cpf,
-					dataNascimento,
-					endereco,
-					telefones,
-					email;
-
 					cliente.idCliente = resultQuery[i].idCliente;
 					cliente.nome = resultQuery[i].nome;
 					cliente.cpf = resultQuery[i].cpf;
@@ -167,7 +122,7 @@ module.exports = function(app){
 	this.updateByIdInDb = function(req, res, next) {
         var idProcurado = req.params.idCliente;
         var criterioAtualizacao = {"idCliente":idProcurado};
-        Cliente.findOne(criterioAtualizacao, function(err, resultQuery) {
+        ClienteModel.findOne(criterioAtualizacao, function(err, resultQuery) {
             if(resultQuery == null) {
                 var erro = new Error('O cliente com o id ' + idProcurado + ' não foi encontrado!');
                 next(erro);
@@ -225,7 +180,7 @@ module.exports = function(app){
 	this.removeByIdInDb = function(req, res, next) {
         var idProcurado = req.params.idCliente;
         var criterioRemocao = {"idCliente":idProcurado};
-        Cliente.findOneAndRemove(criterioRemocao, function(err, resultQuery) {
+        ClienteModel.findOneAndRemove(criterioRemocao, function(err, resultQuery) {
             if(resultQuery == null) {
                 var erro = new Error('Falha ao tentar remover o cliente com o id ' + idProcurado + "!");
                 next(erro);
