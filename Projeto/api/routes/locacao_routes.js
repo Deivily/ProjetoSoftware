@@ -4,6 +4,7 @@ module.exports = function(app){
 	//app.get('/', cliente.index);
 	app.get('/locacoes', locacaoController.getAllInDb);
 	app.get('/locacoes/id/:idLocacao', locacaoController.getByIdInDb);
+	app.get('/locacoes/atualizar/:idLocacao', locacaoController.updateByIdInDb);
 	//app.get('/inicio', locacaoControler.inicial);
 
 	return this;
