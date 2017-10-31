@@ -5,11 +5,13 @@ module.exports = function(app){
     var Cliente = require('../models/cliente_model.js');
     var Item = require('../models/item_model.js');
 
-    this.saveLocacaoInDb = function(idLocacao, idCliente, idItens, dataInicio, dataFim) {
+    this.saveLocacaoInDb = function(idLocacao, idCliente, nomeCliente, cpf, itens, dataInicio, dataFim) {
         new Locacao({
             'idLocacao': idLocacao,
             'idCliente': idCliente,
-            'idItens': idItens,
+            'nomeCliente': nomeCliente,
+            'cpf': cpf,
+            'itens': itens,
             'dataInicio': dataInicio,
             'dataFim': dataFim
         }).save(function(err, locacao) {
@@ -21,53 +23,30 @@ module.exports = function(app){
             }
         });
     };
+    var idLocacao = 1;
+    var idCliente = 1;
+    var nomeCliente = 'Deivily';
+    var cpf = '111.111.111-11';
+    var itens = [{idItem: 1, descricaoItem: 'Painel Ben 10', valorLocacao: 10, disponibilidadeItem: true}];
+    var dataInicio = '2017-10-24';
+    var dataFim = '2017-10-25';
 
-    var idItens = [1,2];
-
-    //this.saveLocacaoInDb(1, 1, idItens, '2017-10-24', '2017-10-25');
+    //this.saveLocacaoInDb(idLocacao, idCliente, nomeCliente, cpf, itens, dataInicio, dataFim);
 
     this.getAllInDb = function(req, res, next) {
-        Locacao.find({}, function(err, resultQuery){
+        var condicoes = {};
+        var campos = {_id: 0, __v: 0}
+        Locacao.find(condicoes, campos, function(err, resultQuery){
             if(err) {
                 var erro = new Error('Falha na busca das locações no banco de dados!');
                 next(erro);
-            } else {
-                var arrayLocacoes = [];
-                
-                for(var i in resultQuery) {
-                    var dadosLocacao = new Object(),
-                    cliente,
-                    itens,
-                    dataInicio,
-                    dataFim;
-
-                    console.log(clienteController.getByIdInDb(1));
-                    if(clienteController.getByIdInDb(resultQuery[i].idCliente) !== undefined) {
-                        var resultadoBuscaCliente = clienteController.getByIdInDb(resultQuery[i].idCliente);
-                        dadosLocacao.cliente = resultadoBuscaCliente;
-                    } else {
-                        dadosLocacao.cliente = null;
-                    }
-
-                    dadosLocacao.itens = [];
-                    for(var j in resultQuery[i].idItens) {
-                        var resultadoBuscaItem = itemController.getByIdInDb(resultQuery[i].idItens[j]);
-                        if(resultadoBuscaItem !== undefined) {
-                            dadosLocacao.itens.push(resultadoBuscaItem);
-                        } else {
-                            dadosLocacao.itens.push(null);
-                        } 
-                    }
-                    dadosLocacao.dataInicio = resultQuery[i].dataInicio;
-                    dadosLocacao.dataFim = resultQuery[i].dataFim;
-                    arrayLocacoes.push(locacao);
-                }
-
-                return res.json(arrayLocacoes);
+            } else {  
+                return res.json(resultQuery);
             }
         });
     };
 
+    
     /*var idItens = [];
     idItens.push(1);
     idItens.push(2);
