@@ -66,7 +66,7 @@ module.exports = function(app){
     
     this.updateByIdInDb = function(req, res, next) {
         var idProcurado = req.params.idLocacao;
-        var condicoes = {"idCliente":idProcurado};
+        var condicoes = {"idLocacao":idProcurado};
         LocacaoModel.findOne(condicoes, function(err, resultQuery) {
             if(resultQuery == null || err) {
                 var erro = new Error('A locação com o id ' + idProcurado + ' não foi encontrada!');
@@ -112,14 +112,14 @@ module.exports = function(app){
 	};
 	
 	this.removeByIdInDb = function(req, res, next) {
-        var idProcurado = req.params.idCliente;
-        var criterioRemocao = {"idCliente":idProcurado};
-        ClienteModel.findOneAndRemove(criterioRemocao, function(err, resultQuery) {
-            if(resultQuery == null) {
-                var erro = new Error('Falha ao tentar remover o cliente com o id ' + idProcurado + "!");
+        var idProcurado = req.params.idLocacao;
+        var condicoes = {"idLocacao":idProcurado};
+        LocacaoModel.findOneAndRemove(condicoes, function(err, respostaBanco) {
+            if(respostaBanco == null || err) {
+                var erro = new Error('Falha ao tentar remover a locação com o id ' + idProcurado + "!");
                 next(erro);
             } else {
-                res.write("<h1>Cliente com o id " + idProcurado + " removido!</h1>");
+                res.write("<h1>Locação com o id " + idProcurado + " removida!</h1>");
                 res.end();
             }
         });
