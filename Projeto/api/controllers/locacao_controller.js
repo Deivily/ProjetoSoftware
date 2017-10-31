@@ -1,9 +1,6 @@
 module.exports = function(app){
-    var itemController = app.controllers.item_controller;
-    var clienteController = app.controllers.cliente_controller;
-    var Locacao = require('../models/locacao_model.js');
-    var Cliente = require('../models/cliente_model.js');
-    var Item = require('../models/item_model.js');
+    var LocacaoModel = require('../models/locacao_model.js');
+    var locacao = new Object(), idLocacao, idCliente, nomeCliente, cpf, itens, dataInicio, dataFim;
 
     this.saveLocacaoInDb = function(idLocacao, idCliente, nomeCliente, cpf, itens, dataInicio, dataFim) {
         new Locacao({
@@ -36,7 +33,7 @@ module.exports = function(app){
     this.getAllInDb = function(req, res, next) {
         var condicoes = {};
         var campos = {_id: 0, __v: 0}
-        Locacao.find(condicoes, campos, function(err, resultQuery){
+        LocacaoModel.find(condicoes, campos, function(err, resultQuery){
             if(err) {
                 var erro = new Error('Falha na busca das locações no banco de dados!');
                 next(erro);
@@ -45,6 +42,27 @@ module.exports = function(app){
             }
         });
     };
+
+    this.getByIdInDb = function(req, res, next) {
+		var idLocacao = req.params.idLocacao;
+		var condicoes = {"idLocacao": idLocacao};
+		LocacaoModel.findOne(condicoes, function(err, resultQuery){
+            if(resultQuery == null || err) {
+				var erro = 'Falha na busca pela locação com o id ' + idLocacao + '!';
+				next(erro);
+            } else {
+                locacao.idLocacao = resultQuery.idLocacao;            
+                locacao.idCliente = resultQuery.idCliente;
+				locacao.nomeCliente = resultQuery.nomeCliente;
+				locacao.cpf = resultQuery.cpf;
+                locacao.itens = resultQuery.itens;
+                locacao.dataInicio = resultQuery.dataInicio;
+                locacao.dataFim = resultQuery.dataFim;
+				
+				return res.json(locacao);
+			}
+		});
+	};
 
     
     /*var idItens = [];
