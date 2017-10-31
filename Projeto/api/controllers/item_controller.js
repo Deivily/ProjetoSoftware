@@ -1,5 +1,5 @@
 module.exports = function(app){
-    var Item = require('../models/item_model.js');
+    var ItemModel = require('../models/item_model.js');
 
     this.saveItemInDb = function(idItem, descricaoItem, valorLocacao, disponibilidadeItem) {
         new Item({
@@ -19,7 +19,7 @@ module.exports = function(app){
     //this.saveItemInDb(1, 'Painel Ben 10', 10, true);
 
     this.getAllInDb = function(req, res, next) {
-        Item.find({}, function(err, resultQuery){
+        ItemModel.find({}, function(err, resultQuery){
             if(err) {
                 var erro = new Error('Falha na busca dos itens no banco de dados!');
                 next(erro);
@@ -47,7 +47,7 @@ module.exports = function(app){
 
     this.getByIdInDb = function(req, res, next) {
         var criterioBusca = {"idItem":req.params.idItem};
-        Item.findOne(criterioBusca, function(err, resultQuery){
+        ItemModel.findOne(criterioBusca, function(err, resultQuery){
             if(resultQuery == null) {
                 var erro = new Error('Falha na busca do item com o id ' + req.params.idItem + ' no banco de dados!');
                 next(erro);
@@ -71,7 +71,7 @@ module.exports = function(app){
     this.getByNameInDb = function(req, res, next) {
         var nomeProcurado = req.params.nomeItem;
         var criterioBusca = {"descricaoItem":nomeProcurado};
-        Item.findOne(criterioBusca, function(err, resultQuery){
+        ItemModel.findOne(criterioBusca, function(err, resultQuery){
             if(resultQuery == null) {
                 var erro = new Error('Falha na busca do item com o nome ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
                 next(erro);
@@ -95,7 +95,7 @@ module.exports = function(app){
     this.getByPartOfNameInDb = function(req, res, next) {
         var nomeProcurado = new RegExp('^' + req.params.nomeItem + '.*', 'i');
         var criterioBusca = {"descricaoItem": {$regex: nomeProcurado}};
-        Item.find(criterioBusca, function(err, resultQuery){
+        ItemModel.find(criterioBusca, function(err, resultQuery){
             if(resultQuery.length < 1) {
                 var erro = new Error('Falha na busca dos itens com o nome similar a ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
                 next(erro);
@@ -125,7 +125,7 @@ module.exports = function(app){
     this.updateByIdInDb = function(req, res, next) {
         var idProcurado = req.params.idItem;
         var criterioAtualizacao = {"idItem":idProcurado};
-        Item.findOne(criterioAtualizacao, function(err, resultQuery) {
+        ItemModel.findOne(criterioAtualizacao, function(err, resultQuery) {
             if(resultQuery == null) {
                 var erro = new Error('O item com o id ' + idProcurado + ' não foi encontrado!');
                 next(erro);
@@ -161,7 +161,7 @@ module.exports = function(app){
     this.removeByIdInDb = function(req, res, next) {
         var idProcurado = req.params.idItem;
         var criterioRemocao = {"idItem":idProcurado};
-        Item.findOneAndRemove(criterioRemocao, function(err, resultQuery) {
+        ItemModel.findOneAndRemove(criterioRemocao, function(err, resultQuery) {
             if(resultQuery == null) {
                 var erro = new Error('Falha ao tentar remover o item com o id ' + idProcurado + "!");
                 next(erro);
