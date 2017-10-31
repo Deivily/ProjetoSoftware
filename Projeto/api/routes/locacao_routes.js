@@ -3,7 +3,7 @@ module.exports = function(app){
 
 	//app.get('/', cliente.index);
 	app.get('/locacoes', locacaoController.getAllInDb);
-	//app.get('/locacoes/:idLocacao', locacaoController.getByidLocacao);
+	app.get('/locacoes/id/:idLocacao', locacaoController.getByIdInDb);
 	//app.get('/inicio', locacaoControler.inicial);
 
 	return this;
