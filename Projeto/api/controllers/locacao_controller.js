@@ -62,7 +62,68 @@ module.exports = function(app){
 				return res.json(locacao);
 			}
 		});
+    };
+    
+    this.updateByIdInDb = function(req, res, next) {
+        var idProcurado = req.params.idLocacao;
+        var condicoes = {"idCliente":idProcurado};
+        LocacaoModel.findOne(condicoes, function(err, resultQuery) {
+            if(resultQuery == null || err) {
+                var erro = new Error('A locação com o id ' + idProcurado + ' não foi encontrada!');
+                next(erro);
+            } else {
+                var locacaoAtualizada = new Object(),
+                idLocacao,
+				idCliente,
+				nomeCliente,
+				cpf,
+                itens,
+                dataInicio,
+                dataFim;
+
+                locacaoAtualizada.idLocacao = 2,
+                locacaoAtualizada.idCliente = 2,
+                locacaoAtualizada.nomeCliente = 'Rodrigo',
+                locacaoAtualizada.cpf = '222.222.222-22';
+                locacaoAtualizada.itens = {idItem: 2, descricaoItem: 'Painel Max Steel', valorLocacao: 10, disponibilidadeItem: true},
+                locacaoAtualizada.dataInicio = '2017-10-31',
+                locacaoAtualizada.dataFim = '2017-10-31';
+
+                locacao = resultQuery;
+                locacao.idLocacao = locacaoAtualizada.idLocacao,
+                locacao.idCliente = locacaoAtualizada.idCliente,
+                locacao.nomeCliente = locacaoAtualizada.nomeCliente,
+                locacao.cpf = locacaoAtualizada.cpf,
+                locacao.itens = locacaoAtualizada.itens,
+                locacao.dataInicio = locacaoAtualizada.dataInicio,
+                locacao.dataFim = locacaoAtualizada.dataFim;
+
+                locacao.save(function(err, respostaBanco) {
+                    if(err) {
+                        var erro = new Error('Falha ao tentar atualizar a locação com o id ' + idProcurado + "!");
+                        next(erro);
+                    } else {
+                        res.write("<h1>Locação com o id " + idProcurado + " atualizada!</h1>");
+                        res.end();
+                    }
+                });  
+            }
+        });
 	};
+	
+	this.removeByIdInDb = function(req, res, next) {
+        var idProcurado = req.params.idCliente;
+        var criterioRemocao = {"idCliente":idProcurado};
+        ClienteModel.findOneAndRemove(criterioRemocao, function(err, resultQuery) {
+            if(resultQuery == null) {
+                var erro = new Error('Falha ao tentar remover o cliente com o id ' + idProcurado + "!");
+                next(erro);
+            } else {
+                res.write("<h1>Cliente com o id " + idProcurado + " removido!</h1>");
+                res.end();
+            }
+        });
+    };
 
     
     /*var idItens = [];
