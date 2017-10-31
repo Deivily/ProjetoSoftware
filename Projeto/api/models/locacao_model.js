@@ -4,7 +4,9 @@ var locacaoSchema = mongoose.Schema;
 var Locacao = new locacaoSchema({
     idLocacao: Number,
     idCliente: Number,
-    idItens: Array,
+    nomeCliente: String,
+    cpf: String,
+    itens: Array,
     dataInicio: Date,
     dataFim: Date
 });
