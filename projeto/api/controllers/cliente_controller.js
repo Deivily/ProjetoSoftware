@@ -26,7 +26,8 @@ module.exports = function(app){
 	//this.saveClienteInDb(2, 'Rodrigo', '111.111.111-11', '1979-07-24', endereco, telefones, 'deivily@bol.com.br');
 	
 	this.getAllInDb = function(req, res, next) {
-        ClienteModel.find({}, function(err, resultQuery){
+		var condicoes = {};
+        ClienteModel.find(condicoes, function(err, resultQuery){
             if(err) {
                 var erro = new Error('Falha na busca dos clientes no banco de dados!');
                 next(erro);
@@ -74,8 +75,8 @@ module.exports = function(app){
 
 	this.getByNameInDb = function(req, res, next) {
         var nomeProcurado = req.params.nomeCliente;
-        var criterioBusca = {"nome":nomeProcurado};
-        ClienteModel.findOne(criterioBusca, function(err, resultQuery){
+        var condicoes = {"nome":nomeProcurado};
+        ClienteModel.findOne(condicoes, function(err, resultQuery){
             if(resultQuery == null) {
                 var erro = new Error('Falha na busca do cliente com o nome ' +'"' + nomeProcurado + '"' + ' no banco de dados!');
                 next(erro);
@@ -95,8 +96,8 @@ module.exports = function(app){
 	
 	this.getByPartOfNameInDb = function(req, res, next) {
         var nomeProcurado = new RegExp('^' + req.params.nomeCliente + '.*', 'i');
-        var criterioBusca = {"nome": {$regex: nomeProcurado}};
-        ClienteModel.find(criterioBusca, function(err, resultQuery){
+        var condicoes = {"nome": {$regex: nomeProcurado}};
+        ClienteModel.find(condicoes, function(err, resultQuery){
             if(resultQuery.length < 1) {
                 var erro = new Error('Falha na busca dos clientes com o nome similar a ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
                 next(erro);
@@ -121,8 +122,8 @@ module.exports = function(app){
 	
 	this.updateByIdInDb = function(req, res, next) {
         var idProcurado = req.params.idCliente;
-        var criterioAtualizacao = {"idCliente":idProcurado};
-        ClienteModel.findOne(criterioAtualizacao, function(err, resultQuery) {
+        var condicoes = {"idCliente":idProcurado};
+        ClienteModel.findOne(condicoes, function(err, resultQuery) {
             if(resultQuery == null) {
                 var erro = new Error('O cliente com o id ' + idProcurado + ' não foi encontrado!');
                 next(erro);
@@ -136,7 +137,7 @@ module.exports = function(app){
 				telefones,
 				email;
 
-				clienteAtualizado.idCliente = 2;
+				clienteAtualizado.idCliente = 3;
 				clienteAtualizado.nome = 'Deivily Lira';
 				clienteAtualizado.cpf = '222.222.222-22';
 				clienteAtualizado.dataNascimento = '01/01/2001';
@@ -155,7 +156,7 @@ module.exports = function(app){
 				]
 				clienteAtualizado.email = 'deivily@uol.com.br';
 
-                var cliente = resultQuery;
+                cliente = resultQuery;
                 cliente.idCliente = clienteAtualizado.idCliente,
 				cliente.nome = clienteAtualizado.nome,
 				cliente.cpf = clienteAtualizado.cpf,
@@ -164,7 +165,7 @@ module.exports = function(app){
 				cliente.telefones = clienteAtualizado.telefones,
 				cliente.email = clienteAtualizado.email;
 
-                cliente.save(function(err, clienteAtualizado) {
+                cliente.save(function(err, respostaBanco) {
                     if(err) {
                         var erro = new Error('Falha ao tentar atualizar o cliente com o id ' + idProcurado + "!");
                         next(erro);
@@ -179,8 +180,8 @@ module.exports = function(app){
 	
 	this.removeByIdInDb = function(req, res, next) {
         var idProcurado = req.params.idCliente;
-        var criterioRemocao = {"idCliente":idProcurado};
-        ClienteModel.findOneAndRemove(criterioRemocao, function(err, resultQuery) {
+        var condicoes = {"idCliente":idProcurado};
+        ClienteModel.findOneAndRemove(condicoes, function(err, resultQuery) {
             if(resultQuery == null) {
                 var erro = new Error('Falha ao tentar remover o cliente com o id ' + idProcurado + "!");
                 next(erro);
