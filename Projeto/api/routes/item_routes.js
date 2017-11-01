@@ -1,8 +1,9 @@
 module.exports = function(app){
 	var itemController = app.controllers.item_controller;
+	var bodyParser = app.bodyParser;
 
 	//app.get('/', cliente.index);
-	//app.get('/itens/salvar', itemController.saveItemInDb);
+	app.post('/itens/salvar', itemController.saveItemInDb);
 	app.get('/itens', itemController.getAllInDb);
 	app.get('/itens/id/:idItem', itemController.getByIdInDb);
 	app.get('/itens/nome/:nomeItem', itemController.getByNameInDb);
