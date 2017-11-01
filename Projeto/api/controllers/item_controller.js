@@ -1,22 +1,24 @@
 module.exports = function(app){
     var ItemModel = require('../models/item_model.js');
 
-    this.saveItemInDb = function(idItem, descricaoItem, valorLocacao, disponibilidadeItem) {
-        new Item({
-            'idItem': idItem,
-            'descricaoItem': descricaoItem,
-            'valorLocacao': valorLocacao,
-            'disponibilidadeItem': disponibilidadeItem
+    this.saveItemInDb = function(req, res, next) {
+        var jsonItem = req.body;
+        new ItemModel({
+            'idItem': jsonItem.idItem,
+            'descricaoItem': jsonItem.descricaoItem,
+            'valorLocacao': jsonItem.valorLocacao,
+            'disponibilidadeItem': jsonItem.disponibilidadeItem
         }).save(function(err, item) {
             if(err) {
                 console.log('Falha ao salvar o item no banco de dados!');
             } else {
                 console.log('Item salvo no banco de dados!');
+                res.json(item);
             }
+            
         });
+        
     };
-
-    //this.saveItemInDb(1, 'Painel Ben 10', 10, true);
 
     this.getAllInDb = function(req, res, next) {
         ItemModel.find({}, function(err, resultQuery){
