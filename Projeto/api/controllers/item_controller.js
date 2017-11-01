@@ -75,8 +75,9 @@ module.exports = function(app){
         var criterioBusca = {"descricaoItem":nomeProcurado};
         ItemModel.findOne(criterioBusca, function(err, resultQuery){
             if(resultQuery == null) {
-                var erro = new Error('Falha na busca do item com o nome ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
-                next(erro);
+                /*var erro = new Error('Falha na busca do item com o nome ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
+                next(erro);*/
+                res.json(resultQuery);
             } else {
                 var item = new Object(),
                 idItem,
