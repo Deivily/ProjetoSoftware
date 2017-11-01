@@ -3,7 +3,7 @@ module.exports = function(app){
     var locacao = new Object(), idLocacao, idCliente, nomeCliente, cpf, itens, dataInicio, dataFim;
 
     this.saveLocacaoInDb = function(idLocacao, idCliente, nomeCliente, cpf, itens, dataInicio, dataFim) {
-        new Locacao({
+        new LocacaoModel({
             'idLocacao': idLocacao,
             'idCliente': idCliente,
             'nomeCliente': nomeCliente,
