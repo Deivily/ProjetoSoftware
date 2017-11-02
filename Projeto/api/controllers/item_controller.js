@@ -71,13 +71,16 @@ module.exports = function(app){
     };
 
     this.getByNameInDb = function(req, res, next) {
-        var nomeProcurado = req.params.nomeItem;
-        var criterioBusca = {"descricaoItem":nomeProcurado};
+        var nomeProcurado = new RegExp('^' + req.params.nomeItem, 'i');
+        var criterioBusca = {"descricaoItem": {$regex: nomeProcurado}};
         ItemModel.findOne(criterioBusca, function(err, resultQuery){
             if(resultQuery == null) {
-                /*var erro = new Error('Falha na busca do item com o nome ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
-                next(erro);*/
                 res.json(resultQuery);
+                res.end();
+            } else if (err){
+                var erro = new Error();
+                erro.status = 500;
+                next(erro);
             } else {
                 var item = new Object(),
                 idItem,
@@ -90,6 +93,7 @@ module.exports = function(app){
                 item.valorLocacao = resultQuery.valorLocacao,
                 item.disponibilidadeItem = resultQuery.disponibilidadeItem;
               
+                
                 return res.json(item);  
             }  
         });
