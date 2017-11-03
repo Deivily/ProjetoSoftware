@@ -13,7 +13,8 @@ module.exports = function(app){
                 console.log('Falha ao salvar o item no banco de dados!');
             } else {
                 console.log('Item salvo no banco de dados!');
-                res.json(item);
+                var objectId = item._id;
+                res.json({"_id": objectId});
             }
             
         });
