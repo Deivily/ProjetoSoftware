@@ -1,8 +1,8 @@
 module.exports = function(app){
-    var controller = app.controllers.home_controller;
+    var homeController = app.controllers.home_controller;
 
-	app.get('/', controller.home);
-    app.get('/inicio', controller.home);
+	app.get('/', homeController.home);
+    app.get('/inicio', homeController.home);
 
 	return this;
 };
