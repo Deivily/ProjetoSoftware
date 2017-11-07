@@ -113,16 +113,6 @@ module.exports = function(app){
             if(resultQuery == null) {
                 res.json(resultQuery);
             } else {
-                /*var itemAtualizado = new Object(),
-                idItem,
-                descricaoItem,
-                valorLocacao,
-                disponibilidadeItem;
-                itemAtualizado.idItem = 3;
-                itemAtualizado.descricaoItem = 'Painel Max Steel';
-                itemAtualizado.valorLocacao = 20;
-                itemAtualizado.disponibilidadeItem = true;*/
-
                 var item = resultQuery;
                 item.idItem = jsonItem.idItem;
                 item.descricaoItem = jsonItem.descricaoItem;
@@ -131,6 +121,7 @@ module.exports = function(app){
                 item.save(function(err, itemAtualizado) {
                     if(err) {
                         var erro = new Error('Falha ao tentar atualizar o item com o id ' + idProcurado + "!");
+                        erro.status = 500;
                         next(erro);
                     } else {
                         res.json(itemAtualizado);
@@ -145,11 +136,13 @@ module.exports = function(app){
         var condicoes = {"idItem":idProcurado};
         ItemModel.findOneAndRemove(condicoes, function(err, resultQuery) {
             if(resultQuery == null) {
-                var erro = new Error('Falha ao tentar remover o item com o id ' + idProcurado + "!");
+                res.json(false);
+            } else if(err) {
+                var erro = new Error('Falha ao tentar remover o item com o id ' + idProcurado + '!');
+                erro.status = 500;
                 next(erro);
             } else {
-                res.write("<h1>Item com o id " + idProcurado + " removido!</h1>");
-                res.end();
+                res.json(true);
             }
         });
     };
