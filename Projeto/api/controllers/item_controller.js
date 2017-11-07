@@ -75,45 +75,15 @@ module.exports = function(app){
     };
 
     this.getByNameInDb = function(req, res, next) {
-        var nomeProcurado = new RegExp('^' + req.params.nomeItem, 'i');
-        var criterioBusca = {"descricaoItem": {$regex: nomeProcurado}};
-        ItemModel.findOne(criterioBusca, function(err, resultQuery){
-            if(resultQuery == null) {
-                res.json(resultQuery);
-                res.end();
-            } else if (err){
-                var erro = new Error();
-                erro.status = 500;
-                next(erro);
-            } else {
-                var item = new Object(),
-                idItem,
-                descricaoItem,
-                valorLocacao,
-                disponibilidadeItem;
-
-                item.idItem = resultQuery.idItem,
-                item.descricaoItem = resultQuery.descricaoItem,
-                item.valorLocacao = resultQuery.valorLocacao,
-                item.disponibilidadeItem = resultQuery.disponibilidadeItem;
-              
-                
-                return res.json(item);  
-            }  
-        });
-    };
-
-    this.getByPartOfNameInDb = function(req, res, next) {
         var nomeProcurado = new RegExp('^' + req.params.nomeItem + '.*', 'i');
         var criterioBusca = {"descricaoItem": {$regex: nomeProcurado}};
-        ItemModel.find(criterioBusca, function(err, resultQuery){
+        var projecao = {sort:{descricaoItem: 1}};
+        ItemModel.find(criterioBusca, null, projecao, function(err, resultQuery){
             if(resultQuery.length < 1) {
                 var erro = new Error('Falha na busca dos itens com o nome similar a ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
                 next(erro);
             } else {
                 var arrayItens = [];
-                
-                
                 for(var i in resultQuery) {
                     var item = new Object(),
                     idItem,
