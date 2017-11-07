@@ -25,7 +25,8 @@ module.exports = function(app){
 	
 	this.getAllInDb = function(req, res, next) {
 		var condicoes = {};
-        ClienteModel.find(condicoes, function(err, resultQuery){
+		var projecao = {sort: {nomeCliente: 1}};
+        ClienteModel.find(condicoes, null, projecao, function(err, resultQuery){
             if(err) {
                 var erro = new Error('Falha na busca dos clientes no banco de dados!');
                 next(erro);
