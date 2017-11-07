@@ -2,6 +2,7 @@ module.exports = function(app){
 	var clienteController = app.controllers.cliente_controller;
 
 	//app.get('/', cliente.index);
+	app.post('/clientes/salvar', clienteController.saveClienteInDb);
 	app.get('/clientes', clienteController.getAllInDb);
 	app.get('/clientes/id/:idCliente', clienteController.getByIdInDb);
 	app.get('/clientes/nome/:nomeCliente', clienteController.getByNameInDb);
