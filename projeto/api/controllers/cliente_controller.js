@@ -1,29 +1,27 @@
 module.exports = function(app){
 	var ClienteModel = require('../models/cliente_model.js');
-	var cliente = new Object(), idCliente, nome, cpf, dataNascimento, endereco, telefones, email;
 
-	this.saveClienteInDb = function(idCliente, nome, cpf, dataNascimento, endereco, telefones, email) {
+	this.saveClienteInDb = function(req, res, next) {
+		var jsonCliente = req.body;
         new ClienteModel({
-            'idCliente': idCliente,
-            'nome': nome,
-            'cpf': cpf,
-			'dataNascimento': dataNascimento,
-			'endereco': endereco,
-			'telefones': telefones,
-			'email': email
+            'idCliente': jsonCliente.idCliente,
+            'nome': jsonCliente.nome,
+            'cpf': jsonCliente.cpf,
+			'dataNascimento': jsonCliente.dataNascimento,
+			'endereco': jsonCliente.endereco,
+			'telefones': jsonCliente.telefones,
+			'email': jsonCliente.email
         }).save(function(err, cliente) {
             if(err) {
-                console.log('Falha ao salvar o cliente no banco de dados!');
+				var erro = new Error('Falha ao salvar o cliente no banco de dados!');
+				erro.status = 500;
+				next(erro);
             } else {
-                console.log('Cliente salvo no banco de dados!');
+				var objectId = cliente._id;
+                res.json({"_id": objectId});
             }
         });
     };
-	var endereco = [{rua: 'rua B'},	{numero: '74'},	{bairro: 'Salgadinho'},	{cidade: 'Olinda'},	{estado: 'PE'},
-		{cep: '53110-730'}];
-    var telefones = [{telefone_1: '988322771'},	{telefone_2: null}, {telefone_3: null}];
-
-	//this.saveClienteInDb(2, 'Rodrigo', '111.111.111-11', '1979-07-24', endereco, telefones, 'deivily@bol.com.br');
 	
 	this.getAllInDb = function(req, res, next) {
 		var condicoes = {};
