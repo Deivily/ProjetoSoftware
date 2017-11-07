@@ -10,15 +10,14 @@ module.exports = function(app){
             'disponibilidadeItem': jsonItem.disponibilidadeItem
         }).save(function(err, item) {
             if(err) {
-                console.log('Falha ao salvar o item no banco de dados!');
+                var erro = new Error('Erro ao salvar o item no banco de dados!');
+                erro.status = 500;
+                next(erro);
             } else {
-                console.log('Item salvo no banco de dados!');
                 var objectId = item._id;
                 res.json({"_id": objectId});
             }
-            
         });
-        
     };
 
     this.getAllInDb = function(req, res, next) {
@@ -52,8 +51,12 @@ module.exports = function(app){
         var criterioBusca = {"idItem":req.params.idItem};
         ItemModel.findOne(criterioBusca, function(err, resultQuery){
             if(resultQuery == null) {
+                res.json(resultQuery);
+                res.end();
+            } else if(err != undefined) {
                 var erro = new Error('Falha na busca do item com o id ' + req.params.idItem + ' no banco de dados!');
-                next(erro);
+                erro.status = 500;
+                next(erro);   
             } else {
                 var item = new Object(),
                 idItem,
