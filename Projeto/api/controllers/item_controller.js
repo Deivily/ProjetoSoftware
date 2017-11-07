@@ -108,12 +108,12 @@ module.exports = function(app){
     this.updateByIdInDb = function(req, res, next) {
         var idProcurado = req.params.idItem;
         var condicoes = {"idItem":idProcurado};
+        var jsonItem = req.body;
         ItemModel.findOne(condicoes, function(err, resultQuery) {
             if(resultQuery == null) {
-                var erro = new Error('O item com o id ' + idProcurado + ' não foi encontrado!');
-                next(erro);
+                res.json(resultQuery);
             } else {
-                var itemAtualizado = new Object(),
+                /*var itemAtualizado = new Object(),
                 idItem,
                 descricaoItem,
                 valorLocacao,
@@ -121,20 +121,19 @@ module.exports = function(app){
                 itemAtualizado.idItem = 3;
                 itemAtualizado.descricaoItem = 'Painel Max Steel';
                 itemAtualizado.valorLocacao = 20;
-                itemAtualizado.disponibilidadeItem = true;
+                itemAtualizado.disponibilidadeItem = true;*/
 
                 var item = resultQuery;
-                item.idItem = itemAtualizado.idItem;
-                item.descricaoItem = itemAtualizado.descricaoItem;
-                item.valorLocacao = itemAtualizado.valorLocacao;
-                item.disponibilidadeItem = itemAtualizado.disponibilidadeItem;
+                item.idItem = jsonItem.idItem;
+                item.descricaoItem = jsonItem.descricaoItem;
+                item.valorLocacao = jsonItem.valorLocacao;
+                item.disponibilidadeItem = jsonItem.disponibilidadeItem;
                 item.save(function(err, itemAtualizado) {
                     if(err) {
                         var erro = new Error('Falha ao tentar atualizar o item com o id ' + idProcurado + "!");
                         next(erro);
                     } else {
-                        res.write("<h1>Item com o id " + idProcurado + " atualizado!</h1>");
-                        res.end();
+                        res.json(itemAtualizado);
                     }
                 });  
             }
