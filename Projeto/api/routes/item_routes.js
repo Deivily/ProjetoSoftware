@@ -6,7 +6,7 @@ module.exports = function(app){
 	app.get('/itens/id/:idItem', itemController.getByIdInDb);
 	app.get('/itens/nome/:nomeItem', itemController.getByNameInDb);
 	app.put('/itens/atualizar/:idItem', itemController.updateByIdInDb);
-	app.get('/itens/remover/:idItem', itemController.removeByIdInDb);
+	app.delete('/itens/remover/:idItem', itemController.removeByIdInDb);
 
 	return this;
 };
