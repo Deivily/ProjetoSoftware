@@ -21,7 +21,9 @@ module.exports = function(app){
     };
 
     this.getAllInDb = function(req, res, next) {
-        ItemModel.find({}, function(err, resultQuery){
+        var condicoes = {};
+        var projecao = {sort:{descricaoItem: 1}};
+        ItemModel.find(condicoes, null, projecao, function(err, resultQuery){
             if(err) {
                 var erro = new Error('Falha na busca dos itens no banco de dados!');
                 next(erro);
@@ -48,8 +50,8 @@ module.exports = function(app){
     };
 
     this.getByIdInDb = function(req, res, next) {
-        var criterioBusca = {"idItem":req.params.idItem};
-        ItemModel.findOne(criterioBusca, function(err, resultQuery){
+        var condicoes = {"idItem":req.params.idItem};
+        ItemModel.findOne(condicoes, function(err, resultQuery){
             if(resultQuery == null) {
                 res.json(resultQuery);
                 res.end();
@@ -76,9 +78,9 @@ module.exports = function(app){
 
     this.getByNameInDb = function(req, res, next) {
         var nomeProcurado = new RegExp('^' + req.params.nomeItem + '.*', 'i');
-        var criterioBusca = {"descricaoItem": {$regex: nomeProcurado}};
+        var condicoes = {"descricaoItem": {$regex: nomeProcurado}};
         var projecao = {sort:{descricaoItem: 1}};
-        ItemModel.find(criterioBusca, null, projecao, function(err, resultQuery){
+        ItemModel.find(condicoes, null, projecao, function(err, resultQuery){
             if(resultQuery.length < 1) {
                 var erro = new Error('Falha na busca dos itens com o nome similar a ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
                 next(erro);
@@ -105,8 +107,8 @@ module.exports = function(app){
 
     this.updateByIdInDb = function(req, res, next) {
         var idProcurado = req.params.idItem;
-        var criterioAtualizacao = {"idItem":idProcurado};
-        ItemModel.findOne(criterioAtualizacao, function(err, resultQuery) {
+        var condicoes = {"idItem":idProcurado};
+        ItemModel.findOne(condicoes, function(err, resultQuery) {
             if(resultQuery == null) {
                 var erro = new Error('O item com o id ' + idProcurado + ' não foi encontrado!');
                 next(erro);
@@ -141,8 +143,8 @@ module.exports = function(app){
 
     this.removeByIdInDb = function(req, res, next) {
         var idProcurado = req.params.idItem;
-        var criterioRemocao = {"idItem":idProcurado};
-        ItemModel.findOneAndRemove(criterioRemocao, function(err, resultQuery) {
+        var condicoes = {"idItem":idProcurado};
+        ItemModel.findOneAndRemove(condicoes, function(err, resultQuery) {
             if(resultQuery == null) {
                 var erro = new Error('Falha ao tentar remover o item com o id ' + idProcurado + "!");
                 next(erro);
@@ -152,32 +154,5 @@ module.exports = function(app){
             }
         });
     };
-
-    
-    /*var novoItem = new Item(1, 'Painel Ben 10' , 'R$15', true);
-    var novoItem2 = new Item(2, 'Painel Barbie' , 'R$15', true);
-    var item = new Object(Item);
-    item.salvarItem(novoItem);
-    item.salvarItem(novoItem2);
-
-    this.getAll = function(req, res, next) {
-        var itens = item.findAll();
-		return res.json(itens);
-    };
-
-	this.getByName = function(req, res, next) {
-		var resultadoBusca = item.findByName(req.params.name);
-		return res.json(resultadoBusca);
-    };
-    
-    this.getById = function(idItem) {
-		var resultadoBusca = item.findById(idItem);
-		return resultadoBusca;
-	};
-
-	this.inicial = function(req, res, next) {
-		return res.render('index', {title: 'Express'});
-    };*/
-    
     return this;
 };
