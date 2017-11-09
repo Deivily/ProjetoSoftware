@@ -28,7 +28,8 @@ module.exports = function(app){
 		var projecao = {sort: {nomeCliente: 1}};
         ClienteModel.find(condicoes, null, projecao, function(err, resultQuery){
             if(err) {
-                var erro = new Error('Falha na busca dos clientes no banco de dados!');
+				var erro = new Error('Falha na busca dos clientes no banco de dados!');
+				erro.status = 500;
                 next(erro);
             } else {
                 var arrayClientes = [];
@@ -55,10 +56,15 @@ module.exports = function(app){
 		var idCliente = req.params.idCliente;
 		var condicoes = {"idCliente": idCliente};
 		ClienteModel.findOne(condicoes, function(err, resultQuery){
-            if(resultQuery == null || err) {
-				var erro = 'Falha na busca pelo cliente com o id ' + idCliente + '!';
+            if(resultQuery == null) {
+				res.json(resultQuery);
+				res.end();
+			} else if(err != undefined) {
+				var erro = new Error('Falha na busca pelo cliente com o id ' + idCliente + '!');
+				erro.status = 500;
 				next(erro);
-            } else {            
+            } else {       
+				var cliente = new Object(), idCliente, nome, cpf, dataNascimento, endereco, telefones, email;     
                 cliente.idCliente = resultQuery.idCliente;
 				cliente.nome = resultQuery.nome;
 				cliente.cpf = resultQuery.cpf;
