@@ -78,14 +78,15 @@ module.exports = function(app){
 		});
 	};
 
-	this.getByNameInDb = function(req, res, next) {
-        var nomeProcurado = req.params.nomeCliente;
-        var condicoes = {"nome":nomeProcurado};
+	/*this.getByNameInDb = function(req, res, next) {
+        var nomeProcurado = new RegExp('^' + req.params.nomeCliente + '.*', 'i');
+        var condicoes = {"nome": {$regex: nomeProcurado}};
         ClienteModel.findOne(condicoes, function(err, resultQuery){
             if(resultQuery == null) {
                 var erro = new Error('Falha na busca do cliente com o nome ' +'"' + nomeProcurado + '"' + ' no banco de dados!');
                 next(erro);
             } else {
+				var cliente = new Object(), idCliente, nome, cpf, dataNascimento, endereco, telefones, email;
                 cliente.idCliente = resultQuery.idCliente;
 				cliente.nome = resultQuery.nome;
 				cliente.cpf = resultQuery.cpf;
@@ -97,9 +98,9 @@ module.exports = function(app){
                 return res.json(cliente);
             }  
         });
-	};
+	};*/
 	
-	this.getByPartOfNameInDb = function(req, res, next) {
+	this.getByNameInDb = function(req, res, next) {
         var nomeProcurado = new RegExp('^' + req.params.nomeCliente + '.*', 'i');
         var condicoes = {"nome": {$regex: nomeProcurado}};
         ClienteModel.find(condicoes, function(err, resultQuery){
@@ -107,7 +108,8 @@ module.exports = function(app){
                 var erro = new Error('Falha na busca dos clientes com o nome similar a ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
                 next(erro);
             } else {
-                var arrayClientes = [];
+				var arrayClientes = [];
+				var cliente = new Object(), idCliente, nome, cpf, dataNascimento, endereco, telefones, email;
                 for(var i in resultQuery) {
 					cliente.idCliente = resultQuery[i].idCliente;
 					cliente.nome = resultQuery[i].nome;
