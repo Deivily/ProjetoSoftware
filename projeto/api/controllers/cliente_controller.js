@@ -25,7 +25,7 @@ module.exports = function(app){
 	
 	this.getAllInDb = function(req, res, next) {
 		var condicoes = {};
-		var projecao = {sort: {nomeCliente: 1}};
+		var projecao = {sort: {nome: 1}};
         ClienteModel.find(condicoes, null, projecao, function(err, resultQuery){
             if(err) {
 				var erro = new Error('Falha na busca dos clientes no banco de dados!');
@@ -77,33 +77,12 @@ module.exports = function(app){
 			}
 		});
 	};
-
-	/*this.getByNameInDb = function(req, res, next) {
-        var nomeProcurado = new RegExp('^' + req.params.nomeCliente + '.*', 'i');
-        var condicoes = {"nome": {$regex: nomeProcurado}};
-        ClienteModel.findOne(condicoes, function(err, resultQuery){
-            if(resultQuery == null) {
-                var erro = new Error('Falha na busca do cliente com o nome ' +'"' + nomeProcurado + '"' + ' no banco de dados!');
-                next(erro);
-            } else {
-				var cliente = new Object(), idCliente, nome, cpf, dataNascimento, endereco, telefones, email;
-                cliente.idCliente = resultQuery.idCliente;
-				cliente.nome = resultQuery.nome;
-				cliente.cpf = resultQuery.cpf;
-				cliente.dataNascimento = resultQuery.dataNascimento;
-				cliente.endereco = resultQuery.endereco;
-				cliente.telefones = resultQuery.telefones;
-				cliente.email = resultQuery.email;
-              
-                return res.json(cliente);
-            }  
-        });
-	};*/
 	
 	this.getByNameInDb = function(req, res, next) {
         var nomeProcurado = new RegExp('^' + req.params.nomeCliente + '.*', 'i');
-        var condicoes = {"nome": {$regex: nomeProcurado}};
-        ClienteModel.find(condicoes, function(err, resultQuery){
+		var condicoes = {"nome": {$regex: nomeProcurado}};
+		var projecao = {sort:{nome: 1}};
+        ClienteModel.find(condicoes, null, projecao, function(err, resultQuery){
             if(resultQuery.length < 1) {
                 var erro = new Error('Falha na busca dos clientes com o nome similar a ' +'"' + req.params.nomeItem + '"' + ' no banco de dados!');
                 next(erro);
@@ -128,57 +107,33 @@ module.exports = function(app){
 	};
 	
 	this.updateByIdInDb = function(req, res, next) {
+		var jsonCliente = req.body;
         var idProcurado = req.params.idCliente;
         var condicoes = {"idCliente":idProcurado};
         ClienteModel.findOne(condicoes, function(err, resultQuery) {
             if(resultQuery == null) {
-                var erro = new Error('O cliente com o id ' + idProcurado + ' não foi encontrado!');
-                next(erro);
+                res.json(resultQuery);
+			} else if(err) {
+				var erro = new Error('O cliente com o id ' + idProcurado + ' não foi encontrado!');
+				erro.status = 500;
+				next(erro);
             } else {
-				var clienteAtualizado = new Object(),
-				idCliente = 2,
-				nome,
-				cpf,
-				dataNascimento,
-				endereco,
-				telefones,
-				email;
-
-				clienteAtualizado.idCliente = 3;
-				clienteAtualizado.nome = 'Deivily Lira';
-				clienteAtualizado.cpf = '222.222.222-22';
-				clienteAtualizado.dataNascimento = '01/01/2001';
-				clienteAtualizado.endereco = [
-						{rua: 'rua Z'},
-						{numero: '74'},
-						{bairro: 'Salgadinho'},
-						{cidade: 'Olinda'},
-						{estado: 'PE'},
-						{cep: '53110-730'}
-				]
-				clienteAtualizado.telefones = [
-					{telefone_1: '988888888'},
-					{telefone_2: null},
-					{telefone_3: null}
-				]
-				clienteAtualizado.email = 'deivily@uol.com.br';
-
                 cliente = resultQuery;
-                cliente.idCliente = clienteAtualizado.idCliente,
-				cliente.nome = clienteAtualizado.nome,
-				cliente.cpf = clienteAtualizado.cpf,
-				cliente.dataNascimento = clienteAtualizado.dataNascimento,
-				cliente.endereco = clienteAtualizado.endereco,
-				cliente.telefones = clienteAtualizado.telefones,
-				cliente.email = clienteAtualizado.email;
+                cliente.idCliente = jsonCliente.idCliente,
+				cliente.nome = jsonCliente.nome,
+				cliente.cpf = jsonCliente.cpf,
+				cliente.dataNascimento = jsonCliente.dataNascimento,
+				cliente.endereco = jsonCliente.endereco,
+				cliente.telefones = jsonCliente.telefones,
+				cliente.email = jsonCliente.email;
 
                 cliente.save(function(err, respostaBanco) {
                     if(err) {
                         var erro = new Error('Falha ao tentar atualizar o cliente com o id ' + idProcurado + "!");
-                        next(erro);
+                        erro.status = 500;
+						next(erro);
                     } else {
-                        res.write("<h1>Cliente com o id " + idProcurado + " atualizado!</h1>");
-                        res.end();
+                        res.json(respostaBanco);
                     }
                 });  
             }
