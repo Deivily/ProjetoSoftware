@@ -5,7 +5,7 @@ module.exports = function(app){
 	app.get('/clientes', clienteController.getAllInDb);
 	app.get('/clientes/id/:idCliente', clienteController.getByIdInDb);
 	app.get('/clientes/nome/:nomeCliente', clienteController.getByNameInDb);
-	app.get('/clientes/atualizar/:idCliente', clienteController.updateByIdInDb);
+	app.put('/clientes/atualizar/:idCliente', clienteController.updateByIdInDb);
 	app.get('/clientes/remover/:idCliente', clienteController.removeByIdInDb);
 
 	return this;
