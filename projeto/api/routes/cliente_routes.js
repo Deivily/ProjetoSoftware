@@ -6,7 +6,7 @@ module.exports = function(app){
 	app.get('/clientes/id/:idCliente', clienteController.getByIdInDb);
 	app.get('/clientes/nome/:nomeCliente', clienteController.getByNameInDb);
 	app.put('/clientes/atualizar/:idCliente', clienteController.updateByIdInDb);
-	app.get('/clientes/remover/:idCliente', clienteController.removeByIdInDb);
+	app.delete('/clientes/remover/:idCliente', clienteController.removeByIdInDb);
 
 	return this;
 };
