@@ -145,11 +145,13 @@ module.exports = function(app){
         var condicoes = {"idCliente":idProcurado};
         ClienteModel.findOneAndRemove(condicoes, function(err, resultQuery) {
             if(resultQuery == null) {
-                var erro = new Error('Falha ao tentar remover o cliente com o id ' + idProcurado + "!");
-                next(erro);
+                res.json(false);
+			} else if(err) {
+				var erro = new Error('Falha ao tentar remover o cliente com o id ' + idProcurado + "!");
+				erro.status = 500;
+				next(erro);
             } else {
-                res.write("<h1>Cliente com o id " + idProcurado + " removido!</h1>");
-                res.end();
+                res.json(true);
             }
         });
     };
