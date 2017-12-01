@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var consign = require('consign');
 var db = require('./db/db_connection');
+var cors = require('cors');
 
 
 //var index = require('./routes/index');
@@ -33,6 +34,14 @@ consign({cwd: 'api'})
 
 //app.use('/', index);
 //app.use('/users', users);
+
+app.use(cors());
+
+/*app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin','*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, Authorization');
+});*/
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

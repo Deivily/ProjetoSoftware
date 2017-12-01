@@ -3,6 +3,7 @@ module.exports = function(app){
 
     this.saveItemInDb = function(req, res, next) {
         var jsonItem = req.body;
+        console.log('teste: ' + JSON.stringify(jsonItem));
         new ItemModel({
             'idItem': jsonItem.idItem,
             'descricaoItem': jsonItem.descricaoItem,
